@@ -35,6 +35,7 @@ A comprehensive full-stack ML application for sustainable energy consumption mon
 - **Interactive Charts**: Plotly.js visualizations
 - **Professional UI**: Clean, modern interface with intuitive navigation
 
+<<<<<<< HEAD
 ## 🛠 Technology Stack
 
 ### Backend
@@ -88,6 +89,8 @@ sus-energy/
     │   └── main.js        # JavaScript functionality
     └── images/            # Generated EDA visualizations
 ```
+=======
+>>>>>>> 8c55bc9113d43998dcc4078c182cbc6fe8629a25
 
 ## 🚀 Quick Start
 
@@ -99,13 +102,20 @@ sus-energy/
 
 ```bash
 # Clone or download the project
+<<<<<<< HEAD
 cd sus-energy
+=======
+cd carbon-emission
+>>>>>>> 8c55bc9113d43998dcc4078c182cbc6fe8629a25
 
 # Install dependencies
 pip install -r requirements.txt
 
+<<<<<<< HEAD
 # Run setup script
 python setup.py
+=======
+>>>>>>> 8c55bc9113d43998dcc4078c182cbc6fe8629a25
 ```
 
 ### 3. Dataset Setup
@@ -117,6 +127,7 @@ Ensure your dataset (`total_dataset.csv`) is in the `data/` directory with colum
 - `y_Freq (Hz)`: Frequency
 - `meter`: Meter ID
 
+<<<<<<< HEAD
 ### 4. Run Application
 
 ```bash
@@ -274,3 +285,8 @@ python app.py
 ---
 
 **Made with ❤️ for a sustainable future** 🌍
+=======
+
+**Made with ❤️ for a sustainable future** 🌍
+
+>>>>>>> 8c55bc9113d43998dcc4078c182cbc6fe8629a25
