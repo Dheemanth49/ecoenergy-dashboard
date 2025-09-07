@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block title %}Leaderboard - EcoEnergy{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-gradient-warning text-dark">
+                <div class="card-body text-center">
+                    <h2><i class="fas fa-trophy"></i> Weekly Leaderboard</h2>
+                    <p class="mb-0">Compete with other users for the most efficient energy consumption!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User's Rank Card -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-primary">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5><i class="fas fa-user"></i> Your Current Ranking</h5>
+                            <p class="mb-0">You are currently ranked <strong>#{{ user_rank.rank }}</strong> with <strong>{{ user_rank.points }}</strong> points this week.</p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="display-4 text-primary">
+                                {% if user_rank.rank == 1 %}🥇
+                                {% elif user_rank.rank == 2 %}🥈
+                                {% elif user_rank.rank == 3 %}🥉
+                                {% else %}#{{ user_rank.rank }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-list-ol"></i> Top Performers This Week</h5>
+                </div>
+                <div class="card-body">
+                    {% if rankings %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>User</th>
+                                        <th>Avg Daily Consumption</th>
+                                        <th>Avg Daily Emissions</th>
+                                        <th>Points</th>
+                                        <th>Badge</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in rankings %}
+                                    <tr class="{% if loop.index <= 3 %}table-warning{% endif %}">
+                                        <td>
+                                            <span class="fw-bold">
+                                                {% if user.rank == 1 %}
+                                                    <span class="text-warning">🥇 #1</span>
+                                                {% elif user.rank == 2 %}
+                                                    <span class="text-secondary">🥈 #2</span>
+                                                {% elif user.rank == 3 %}
+                                                    <span class="text-warning">🥉 #3</span>
+                                                {% else %}
+                                                    #{{ user.rank }}
+                                                {% endif %}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <strong>{{ user.username }}</strong>
+                                            {% if user.username == current_user.username %}
+                                                <span class="badge bg-primary ms-2">You</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info">{{ user.avg_consumption }} kWh</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-danger">{{ user.avg_emissions }} kg CO₂</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-success">{{ user.points }} pts</span>
+                                        </td>
+                                        <td>
+                                            {% if user.avg_consumption < 2 %}
+                                                <span class="badge bg-success">🌱 Eco Saver</span>
+                                            {% elif user.avg_consumption < 5 %}
+                                                <span class="badge bg-primary">🌍 Green User</span>
+                                            {% elif user.avg_consumption < 8 %}
+                                                <span class="badge bg-warning">🔥 Carbon Heavy</span>
+                                            {% else %}
+                                                <span class="badge bg-info">🏆 Efficient Hero</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-trophy fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No rankings available yet</h5>
+                            <p class="text-muted">Be the first to start tracking your energy consumption!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Chart -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-bar"></i> Top 10 Users - Weekly Performance</h5>
+                </div>
+                <div class="card-body">
+                    <div id="leaderboardChart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scoring System -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card" style="background-color: #f8f9fa;">
+                <div class="card-body">
+                    <h5 class="text-dark"><i class="fas fa-info-circle"></i> How Scoring Works</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-dark">Point Calculation:</h6>
+                            <ul class="list-unstyled">
+                                <li class="text-dark"><i class="fas fa-star text-warning"></i> Lower consumption = Higher points</li>
+                                <li class="text-dark"><i class="fas fa-star text-warning"></i> Points = (10 - avg_daily_consumption) × 10</li>
+                                <li class="text-dark"><i class="fas fa-star text-warning"></i> Minimum 0 points, maximum 100 points</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-dark">Weekly Reset:</h6>
+                            <ul class="list-unstyled">
+                                <li class="text-dark"><i class="fas fa-calendar text-primary"></i> Leaderboard resets every Monday</li>
+                                <li class="text-dark"><i class="fas fa-calendar text-primary"></i> Based on 7-day rolling average</li>
+                                <li class="text-dark"><i class="fas fa-calendar text-primary"></i> Encourages consistent improvement</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Create leaderboard chart
+    const users = {{ rankings|tojson if rankings else []|tojson }};
+    
+    if (users.length > 0) {
+        const usernames = users.slice(0, 10).map(u => u.username);
+        const consumptions = users.slice(0, 10).map(u => u.avg_consumption);
+        const points = users.slice(0, 10).map(u => u.points);
+        
+        const trace1 = {
+            x: usernames,
+            y: consumptions,
+            name: 'Avg Daily Consumption (kWh)',
+            type: 'bar',
+            marker: {color: '#007bff'}
+        };
+        
+        const trace2 = {
+            x: usernames,
+            y: points,
+            name: 'Points',
+            type: 'bar',
+            yaxis: 'y2',
+            marker: {color: '#28a745'}
+        };
+        
+        const layout = {
+            title: 'Top 10 Users Performance',
+            xaxis: {title: 'Users'},
+            yaxis: {title: 'Consumption (kWh)', side: 'left'},
+            yaxis2: {
+                title: 'Points',
+                side: 'right',
+                overlaying: 'y'
+            },
+            barmode: 'group',
+            margin: {t: 40}
+        };
+        
+        Plotly.newPlot('leaderboardChart', [trace1, trace2], layout, {responsive: true});
+    } else {
+        document.getElementById('leaderboardChart').innerHTML = 
+            '<div class="text-center py-5"><i class="fas fa-chart-bar fa-3x text-muted"></i><p class="text-muted mt-3">No data available for chart</p></div>';
+    }
+});
+</script>
+{% endblock %}

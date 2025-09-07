@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}Badges - EcoEnergy{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Current Badge Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-lg" style="background: linear-gradient(135deg, {{ current_badge.color }}22, {{ current_badge.color }}44);">
+                <div class="card-body text-center py-5">
+                    <div class="display-1 mb-3">{{ current_badge.emoji }}</div>
+                    <h2 class="mb-3" style="color: {{ current_badge.color }};">{{ current_badge.name }}</h2>
+                    <p class="lead mb-4">{{ current_badge.description }}</p>
+                    
+                    <!-- Progress Bar -->
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="mb-3">Progress to Next Level</h6>
+                                    <div class="progress mb-3" style="height: 20px;">
+                                        <div class="progress-bar bg-success" role="progressbar" 
+                                             style="width: {{ progress.progress_percentage }}%">
+                                            {{ "%.0f"|format(progress.progress_percentage) }}%
+                                        </div>
+                                    </div>
+                                    <p class="mb-0"><strong>Goal:</strong> {{ progress.next_goal }}</p>
+                                    <small class="text-muted">Current 7-day average: {{ "%.2f"|format(progress.current_consumption) }} kWh/day</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Badge Categories -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="mb-4"><i class="fas fa-award"></i> Badge Categories</h3>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card h-100 border-success">
+                <div class="card-body text-center">
+                    <div class="display-4 mb-3">🌱</div>
+                    <h5 class="card-title text-success">Eco Saver</h5>
+                    <p class="card-text">Using less than 2 kWh per day</p>
+                    <div class="badge bg-success">Excellent Efficiency</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card h-100 border-primary">
+                <div class="card-body text-center">
+                    <div class="display-4 mb-3">🌍</div>
+                    <h5 class="card-title text-primary">Green User</h5>
+                    <p class="card-text">Using 2-5 kWh per day efficiently</p>
+                    <div class="badge bg-primary">Good Balance</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card h-100 border-warning">
+                <div class="card-body text-center">
+                    <div class="display-4 mb-3">🔥</div>
+                    <h5 class="card-title text-warning">Carbon Heavy</h5>
+                    <p class="card-text">Using 5-8 kWh per day</p>
+                    <div class="badge bg-warning">Room for Improvement</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card h-100 border-info">
+                <div class="card-body text-center">
+                    <div class="display-4 mb-3">🏆</div>
+                    <h5 class="card-title text-info">Efficient Hero</h5>
+                    <p class="card-text">High usage but improving</p>
+                    <div class="badge bg-info">Making Progress</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Badge History -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-history"></i> Badge History (Last 30 Days)</h5>
+                </div>
+                <div class="card-body">
+                    {% if badges %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Badge</th>
+                                        <th>Daily Consumption</th>
+                                        <th>CO₂ Emissions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for badge_entry in badges %}
+                                    <tr>
+                                        <td>{{ badge_entry.date }}</td>
+                                        <td>
+                                            <span class="badge" style="background-color: {{ badge_entry.badge.color }};">
+                                                {{ badge_entry.badge.emoji }} {{ badge_entry.badge.name }}
+                                            </span>
+                                        </td>
+                                        <td>{{ "%.2f"|format(badge_entry.consumption) }} kWh</td>
+                                        <td>{{ "%.2f"|format(badge_entry.consumption * 0.82) }} kg CO₂</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-medal fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No badge history yet</h5>
+                            <p class="text-muted">Start using energy to earn your first badges!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tips Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card" style="background-color: #f8f9fa;">
+                <div class="card-body">
+                    <h5 class="text-dark"><i class="fas fa-lightbulb text-warning"></i> Tips to Improve Your Badge</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="text-dark"><i class="fas fa-check text-success"></i> Use energy-efficient appliances</li>
+                                <li class="text-dark"><i class="fas fa-check text-success"></i> Unplug devices when not in use</li>
+                                <li class="text-dark"><i class="fas fa-check text-success"></i> Optimize heating and cooling settings</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="text-dark"><i class="fas fa-check text-success"></i> Use natural light during the day</li>
+                                <li class="text-dark"><i class="fas fa-check text-success"></i> Run appliances during off-peak hours</li>
+                                <li class="text-dark"><i class="fas fa-check text-success"></i> Regular maintenance of electrical systems</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('suggestions') }}" class="btn btn-warning">
+                            <i class="fas fa-arrow-right"></i> Get Personalized Suggestions
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
