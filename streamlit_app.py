@@ -205,13 +205,15 @@ def show_dashboard(data_processor, ml_models, gamification, user):
         """.format(today_emissions), unsafe_allow_html=True)
     
     with col3:
+        badge_display = badge['name'] if isinstance(badge, dict) else (badge or "No Badge")
+        badge_emoji = badge['emoji'] if isinstance(badge, dict) else "🏅"
         st.markdown("""
         <div style="background: linear-gradient(135deg, #ffc107, #e0a800); padding: 1rem; border-radius: 10px; color: white; text-align: center;">
-            <h3>🏅</h3>
+            <h3>{}</h3>
             <h5>Current Badge</h5>
             <h3>{}</h3>
         </div>
-        """.format(badge or "No Badge"), unsafe_allow_html=True)
+        """.format(badge_emoji, badge_display), unsafe_allow_html=True)
     
     with col4:
         st.markdown("""
@@ -305,11 +307,22 @@ def show_badges(gamification, user):
     progress = gamification.get_badge_progress(user['id'])
     
     # Current Badge Section
+    if isinstance(current_badge, dict):
+        badge_name = current_badge['name']
+        badge_emoji = current_badge['emoji']
+        badge_desc = current_badge['description']
+        badge_color = current_badge['color']
+    else:
+        badge_name = current_badge or "No Badge"
+        badge_emoji = "🏆"
+        badge_desc = "Your current achievement level"
+        badge_color = "#667eea"
+    
     st.markdown(f"""
-    <div class="badge-card">
-        <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
-        <h2>{current_badge or "No Badge"}</h2>
-        <p>Your current achievement level</p>
+    <div style="background: linear-gradient(135deg, {badge_color}22, {badge_color}44); padding: 2rem; border-radius: 15px; color: white; text-align: center;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">{badge_emoji}</div>
+        <h2 style="color: {badge_color};">{badge_name}</h2>
+        <p>{badge_desc}</p>
     </div>
     """, unsafe_allow_html=True)
     
