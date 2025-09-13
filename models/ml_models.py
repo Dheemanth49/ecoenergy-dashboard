@@ -15,6 +15,8 @@ class MLModels:
         self.classification_model = None
         self.scaler = StandardScaler()
         self.is_trained = False
+        self.forecast_mae = None
+        self.classification_accuracy = None
         
     def prepare_features(self, df):
         """Prepare features for ML models"""
@@ -103,11 +105,23 @@ class MLModels:
         self.classification_model.fit(X_daily_train, y_class_train)
         
         # Evaluate models
-        forecast_mae = mean_absolute_error(y_test, self.forecast_model.predict(X_test))
-        class_accuracy = accuracy_score(y_class_test, self.classification_model.predict(X_daily_test))
+        forecast_predictions = self.forecast_model.predict(X_test)
+        class_predictions = self.classification_model.predict(X_daily_test)
         
-        print(f"Forecast MAE: {forecast_mae:.3f}")
-        print(f"Classification Accuracy: {class_accuracy:.3f}")
+        forecast_mae = mean_absolute_error(y_test, forecast_predictions)
+        class_accuracy = accuracy_score(y_class_test, class_predictions)
+        
+        print(f"\n=== MODEL ACCURACY RESULTS ===")
+        print(f"Forecasting Model MAE: {forecast_mae:.4f} kWh")
+        print(f"Classification Model Accuracy: {class_accuracy:.4f} ({class_accuracy*100:.2f}%)")
+        print(f"Training Samples: {len(df_features)}")
+        print(f"Test Samples (Forecast): {len(X_test)}")
+        print(f"Test Samples (Classification): {len(X_daily_test)}")
+        print(f"================================\n")
+        
+        # Store accuracy metrics
+        self.forecast_mae = forecast_mae
+        self.classification_accuracy = class_accuracy
         
         self.is_trained = True
         return True
@@ -180,6 +194,18 @@ class MLModels:
         # Randomize suggestions to make them feel personalized
         np.random.shuffle(suggestions)
         return suggestions[:3]  # Return top 3 suggestions
+    
+    def get_model_accuracy(self):
+        """Return model accuracy metrics"""
+        if not self.is_trained:
+            return {"error": "Models not trained yet"}
+        
+        return {
+            "forecast_mae": self.forecast_mae,
+            "classification_accuracy": self.classification_accuracy,
+            "classification_accuracy_percent": self.classification_accuracy * 100 if self.classification_accuracy else None,
+            "is_trained": self.is_trained
+        }
     
     def calculate_potential_savings(self, meter_id):
         """Calculate potential CO2 and cost savings"""
