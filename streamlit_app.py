@@ -328,14 +328,6 @@ def login_page():
     col1, col2, col3 = st.columns([1, 2, 1])
     
     with col2:
-        st.markdown("""
-        <div style="text-align: center; padding: 2rem 0;">
-            <h1 style="font-size: 3rem; margin-bottom: 0.5rem;">🌱</h1>
-            <h1 style="color: white; font-weight: 700; margin-bottom: 0.5rem;">EcoEnergy Dashboard</h1>
-            <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">Monitor your energy consumption sustainably</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
         with st.form("login_form"):
             st.markdown("<h3 style='text-align: center; color: white; margin-bottom: 1.5rem;'>Welcome Back</h3>", unsafe_allow_html=True)
             username = st.text_input("👤 Username", placeholder="Enter your username")
