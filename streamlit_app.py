@@ -232,7 +232,9 @@ def show_dashboard(data_processor, ml_models, gamification, user):
         chart_data = data_processor.get_chart_data(user['meter_id'], 'daily')
         if chart_data:
             df = pd.DataFrame(chart_data)
-            fig = px.line(df, x='date', y='consumption', title='Daily Energy Consumption (Last 30 Days)')
+            # Use correct column names from chart_data
+            x_col = 'labels' if 'labels' in df.columns else 'date'
+            fig = px.line(df, x=x_col, y='consumption', title='Daily Energy Consumption (Last 30 Days)')
             fig.update_traces(line_color='#007bff')
             st.plotly_chart(fig, use_container_width=True)
         else:
@@ -241,8 +243,11 @@ def show_dashboard(data_processor, ml_models, gamification, user):
     with col2:
         st.subheader("🍃 Carbon Footprint")
         if chart_data:
-            df['emissions'] = df['consumption'] * 0.82
-            fig = px.bar(df, x='date', y='emissions', title='Daily CO₂ Emissions')
+            df = pd.DataFrame(chart_data)
+            x_col = 'labels' if 'labels' in df.columns else 'date'
+            if 'emissions' not in df.columns:
+                df['emissions'] = df['consumption'] * 0.82
+            fig = px.bar(df, x=x_col, y='emissions', title='Daily CO₂ Emissions')
             fig.update_traces(marker_color='#dc3545')
             st.plotly_chart(fig, use_container_width=True)
         else:
@@ -253,7 +258,10 @@ def show_dashboard(data_processor, ml_models, gamification, user):
     forecast_data = ml_models.get_forecast(user['meter_id'])
     if forecast_data:
         df_forecast = pd.DataFrame(forecast_data)
-        fig = px.line(df_forecast, x='date', y='predicted_consumption', title='Energy Consumption Forecast')
+        # Use correct column names from forecast_data
+        x_col = 'dates' if 'dates' in df_forecast.columns else 'date'
+        y_col = 'forecast' if 'forecast' in df_forecast.columns else 'predicted_consumption'
+        fig = px.line(df_forecast, x=x_col, y=y_col, title='Energy Consumption Forecast')
         fig.update_traces(line=dict(color='#28a745', dash='dash'))
         st.plotly_chart(fig, use_container_width=True)
     else:
