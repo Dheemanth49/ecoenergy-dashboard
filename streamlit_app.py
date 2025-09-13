@@ -912,7 +912,7 @@ def show_suggestions(ml_models, user):
             <p style="color: rgba(255,255,255,0.8); margin-bottom: 1rem;">{rec['desc']}</p>
             <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                 <span style="background: rgba(40, 167, 69, 0.2); color: #28a745; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; border: 1px solid rgba(40, 167, 69, 0.3);"><strong>Potential Saving</strong><br>{rec['saving']}</span>
-                <span style="background: rgba(0, 123, 255, 0.2); color: #007bff; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; border: 1px solid rgba(0, 123, 255, 0.3);"><strong>Difficulty</strong><br>{rec['difficulty']}</span>r-radius: 20px; font-size: 0.85rem; border: 1px solid rgba(0, 123, 255, 0.3);"><strong>Difficulty</strong><br>{rec['difficulty']}</span>
+                <span style="background: rgba(0, 123, 255, 0.2); color: #007bff; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; border: 1px solid rgba(0, 123, 255, 0.3);"><strong>Difficulty</strong><br>{rec['difficulty']}</span>
                 <span style="background: rgba(255, 152, 0, 0.2); color: #ff9800; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; border: 1px solid rgba(255, 152, 0, 0.3);"><strong>CO₂ Reduction Potential</strong><br>{rec['co2']}</span>
             </div>
         </div>
