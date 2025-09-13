@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: ecoenergy-dashboard
+    env: python
+    buildCommand: "pip install -r requirements.txt && python setup.py"
+    startCommand: "python app.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.16
+      - key: FLASK_ENV
+        value: production
