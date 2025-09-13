@@ -18,6 +18,14 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+# App title
+st.markdown("""
+<div style="text-align: center; padding: 1rem 0; margin-bottom: 2rem;">
+    <h1 style="font-size: 3rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0;">🌱 EcoEnergy Dashboard</h1>
+    <p style="color: rgba(255,255,255,0.8); font-size: 1.2rem; margin: 0.5rem 0 0 0;">Smart Energy Management & Carbon Footprint Tracking</p>
+</div>
+""", unsafe_allow_html=True)
+
 # Custom CSS
 st.markdown("""
 <style>
